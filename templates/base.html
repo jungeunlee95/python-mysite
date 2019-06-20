@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mysite</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+{% block csslink %}
+{% endblock %}
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<h1>MySite</h1>
+			<ul>
+				<li><a href="/user/loginform">로그인</a><li>
+				<li><a href="/user/joinform">회원가입</a><li>
+				<li><a href="/user/">회원정보수정</a><li>
+				<li><a href="/user/logout">로그아웃</a><li>
+				<li>님 안녕하세요 ^^;</li>
+			</ul>
+		</div>
+		<div id="wrapper">
+			<div id="content">
+
+                {% block content %}{% endblock %}
+
+			</div>
+		</div>
+		<div id="navigation">
+			<ul>
+				<li><a href="/">이정은</a></li>
+				<li><a href="/guestbook">방명록</a></li>
+				<li><a href="/board">게시판</a></li>
+			</ul>
+		</div>
+		<div id="footer">
+			<p>(c)opyright 2015, 2016, 2017, 2018, 2019</p>
+		</div>
+	</div>
+</body>
+</html>
