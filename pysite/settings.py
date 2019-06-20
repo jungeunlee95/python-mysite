@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'main',
     'user',
+    'guestbook',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
