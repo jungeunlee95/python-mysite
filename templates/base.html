@@ -11,11 +11,15 @@
 		<div id="header">
 			<h1>MySite</h1>
 			<ul>
+				{% if request.session.authUser is None %}
 				<li><a href="/user/loginform">로그인</a><li>
 				<li><a href="/user/joinform">회원가입</a><li>
-				<li><a href="/user/">회원정보수정</a><li>
+
+				{% else %}
+				<li><a href="/user/updateform">회원정보수정</a><li>
 				<li><a href="/user/logout">로그아웃</a><li>
-				<li>님 안녕하세요 ^^;</li>
+				<li>[{{ request.session.authUser.name }}]님 안녕하세요 ^^;</li>
+				{% endif %}
 			</ul>
 		</div>
 		<div id="wrapper">
@@ -28,8 +32,8 @@
 		<div id="navigation">
 			<ul>
 				<li><a href="/">이정은</a></li>
-				<li><a href="/guestbook">방명록</a></li>
-				<li><a href="/board">게시판</a></li>
+				<li><a href="/guestbook/list">방명록</a></li>
+				<li><a href="/board/list">게시판</a></li>
 			</ul>
 		</div>
 		<div id="footer">

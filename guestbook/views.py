@@ -19,15 +19,15 @@ def write(request):
 
     return HttpResponseRedirect('list')
 
-def deleteform(request, id=0):
-    return render(request, 'guestbook/deleteform.html', {'id':id})
+def delete(request, id=0):
+    if request.method == 'GET':
+        return render(request, 'guestbook/deleteform.html', {'id': id})
+    elif request.method == 'POST':
+        id = request.POST['no']
+        password = request.POST['password']
 
-def delete(request):
-    id = request.POST['no']
-    password = request.POST['password']
+        guestbook = Guestbook.objects.filter(id=id)
+        if guestbook[0].password == password:
+            guestbook.delete()
 
-    guestbook = Guestbook.objects.filter(id=id)
-    if guestbook[0].password == password:
-        guestbook.delete()
-
-    return HttpResponseRedirect('list')
+        return HttpResponseRedirect('list')

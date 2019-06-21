@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'main',
     'user',
     'guestbook',
+    'board',
+    'mathfilters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,3 +128,8 @@ USE_TZ = True
 STATICFILES_DIRS=(os.path.join(BASE_DIR, 'statics'),)
 
 STATIC_URL = '/assets/'
+
+# 브라우저 닫으면 session 없애기
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# update되면 session바로 반영
+SESSION_SAVE_EVERY_REQUEST = True
