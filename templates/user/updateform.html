@@ -11,7 +11,7 @@
 </script>
 {% endif %}
 <div id="user">
-	<form id="join-form" name="joinForm" method="post" action="/user/update">
+	<form id="join-form" name="joinForm" method="post" action="{% url 'user:update' %}">
 		{% csrf_token %}
 		<label class="block-label" for="name">이름</label>
 		<input id="name" name="name" type="text" value="{{ user.name }}">

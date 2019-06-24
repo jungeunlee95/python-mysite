@@ -20,7 +20,6 @@
 			<th>작성일</th>
 		</tr>
 		{% for board in boardlist %}
-		{{current_page|sub:1|mul:10|add:forloop.counter|sub:1|add:board_count}}
 			<tr>
 				<td>[{{current_page|sub:1|mul:10|add:forloop.counter|sub:1|sub:board_count|abs}}]</td>
 		{% if board.depth == 0 %}
@@ -28,22 +27,15 @@
 					{% if board.title == '삭제된 글입니다.'%}
 						{{board.title}}
 					{% else %}
-						<a href="/board/{{board.id}}">{{board.title}}</a>
+						<a href="{% url 'board:view' board.id %}">{{board.title}}</a>
 					{% endif %}
 				</td>
 		{% else %}
-				<td style="text-align: left;padding-left:0px;">
-
-					{% with ''|center:board.depth as range %}
-					{% for i in range %}
-					&nbsp;&nbsp;&nbsp;
-					{% endfor %}
-					{% endwith %}
-
+				<td style="text-align: left;padding-left:{{board.depth|mul:15}}px;">
 					{% if board.title == '삭제된 글입니다.'%}
 					<img src="/assets/images/reply.png">{{board.title}}
 					{% else %}
-					<img src="/assets/images/reply.png"><a href="/board/{{board.id}}">{{board.title}}</a>
+					<img src="/assets/images/reply.png"><a href="{% url 'board:view' board.id %}">{{board.title}}</a>
 					{% endif %}
 				</td>
 		{% endif %}
@@ -62,7 +54,7 @@
 	<!-- pager 추가 -->
 
 	<div class="bottom">
-		<a href="/board/writeform" id="new-book">글쓰기</a>
+		<a href="{% url 'board:writeform' %}" id="new-book">글쓰기</a>
 	</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

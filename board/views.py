@@ -1,16 +1,16 @@
 from django.db.models import F, Max
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from board.models import Board
 from user.models import User
 
-
-def list(request, page=1, pagesize=10):
-    start = (page - 1) * pagesize
+PAGESIZE=10
+def list(request, page=1):
+    start = (page - 1) * PAGESIZE
     board_count = Board.objects.count()
-    boardlist = Board.objects.all().order_by('-groupno','orderno')[start:start+pagesize]
+    boardlist = Board.objects.all().order_by('-groupno','orderno')[start:start+PAGESIZE]
 
     data = {
         'boardlist': boardlist,
@@ -49,13 +49,30 @@ def write(request):
     return HttpResponseRedirect('list')
 
 def view(request, no=0):
-    if no == 0: return HttpResponseRedirect('list')
+    # 존재하는 게시글이 없을 경우 return
+    if no == 0:
+        return HttpResponseRedirect('list')
 
     board = Board.objects.filter(id=no)
-    board.update(hit=F('hit')+1)
+
     data = {
         'board':board[0]
     }
+
+    # 조회한 적이 없는 경우 조회수 +1
+    response = render(request, 'board/view.html', data)
+    if request.COOKIES.get('hit') is not None :
+        cookies = request.COOKIES.get('hit')
+        cookies_list = cookies.split('|')
+        if str(no) not in cookies_list:
+            response.set_cookie('hit',cookies+f'|{no}', max_age=24*60*60)
+            board.update(hit=F('hit')+1)
+            return response
+    else:
+        response.set_cookie('hit', no , max_age=24 * 60 * 60)
+        board.update(hit=F('hit') + 1)
+        return response
+
     return render(request, 'board/view.html', data)
 
 def modifyform(request, no=0):

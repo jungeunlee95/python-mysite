@@ -7,7 +7,8 @@
 
 {% block content %}
 <div id="board">
-	<form class="board-form" method="post" action="/board/write">
+	<!--<form class="board-form" method="post" action="/board/write">-->
+	<form class="board-form" method="post" action="{% url 'board:write' %}">
 		{% csrf_token %}
 		{% if no %}
 			<input type="hidden" name="no" value="{{no}}">
@@ -30,7 +31,7 @@
 			</tr>
 		</table>
 		<div class="bottom">
-			<a href="/board/list">취소</a>
+			<a href="{% url 'board:list' %}">취소</a>
 			<input type="submit" value="등록">
 		</div>
 	</form>

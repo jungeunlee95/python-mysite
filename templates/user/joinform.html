@@ -35,21 +35,45 @@
 					}else{
 						$('#img-email').show();
 						$('#btn-email').hide();
+						$("#join-submit").attr("id_check_result", "success");
 						return;
 					}
 					// console.log(response)
+				},
+                error : function(xhr, error){
+					alert("서버와의 통신에서 문제가 발생했습니다.");
+					console.error("error : " + error);
 				}
-
 			})
 		});
-	});
 
+    $('#join-form').submit(function() {
+		   if($("input:checkbox[id='agree-prov']").is(":checked") == false) {
+		      alert("약관동의를 확인하여 주시기 바랍니다.");
+		      return false;
+		   }
+
+		   console.log($("#join-submit").attr("id_check_result"));
+
+		   if($("#join-submit").attr("id_check_result") == "fail") {
+		      alert("id 중복체크를 해주시기 바랍니다.");
+		      $("#email").focus();
+		      return false;
+		   }
+		});
+
+		$("#email").on("propertychange change keyup paste input", function(){
+		   $('#img-email').hide();
+		   $('#btn-email').show();
+		   $("#join-submit").attr("id_check_result", "fail");
+		});
+	});
 </script>
 {% endblock%}
 
 {% block content %}
 <div id="user">
-	<form id="join-form" name="joinForm" method="post" action="/user/join">
+	<form id="join-form" name="joinForm" method="post" action="{% url 'user:join' %}">
 		{% csrf_token %}
 		<label class="block-label" for="name">이름</label>
 		<input id="name" name="name" type="text" value="">
@@ -74,7 +98,7 @@
 			<label>서비스 약관에 동의합니다.</label>
 		</fieldset>
 
-		<input type="submit" value="가입하기">
+		<input type="submit" id="join-submit" id_check_result="fail" value="가입하기">
 
 	</form>
 </div>

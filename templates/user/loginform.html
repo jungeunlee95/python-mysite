@@ -7,7 +7,7 @@
 
 {% block content %}
 <div id="user">
-	<form id="login-form" name="loginform" method="post" action="/user/login">
+	<form id="login-form" name="loginform" method="post" action="{% url 'user:login' %}">
 		{% csrf_token %}
 		<label class="block-label" for="email">이메일</label>
 		<input id="email" name="email" type="text" value="">

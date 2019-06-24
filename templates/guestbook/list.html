@@ -7,7 +7,7 @@
 
 {% block content %}
 <div id="guestbook">
-	<form action="/guestbook/write" method="post">
+	<form action="{% url 'guestbook:write' %}" method="post">
 		{% csrf_token %}
 		<table>
 			<tr>
@@ -31,7 +31,7 @@
 						<td>[{{ forloop.revcounter }}]</td>
 						<td>{{ guestbook.name }}</td>
 						<td>{{ guestbook.reg_date|date:'Y-m-d H:i' }}</td>
-						<td><a href="/guestbook/delete/{{guestbook.id}}">삭제</a></td>
+						<td><a href="{% url 'guestbook:delete' guestbook.id %}">삭제</a></td>
 					</tr>
 					<tr>
 						<td colspan=4>
@@ -45,7 +45,7 @@
 						<td>[{{ guestbooklist|length | sub:forloop.counter | add:1  }}]</td>
 						<td>{{ guestbook.name }}</td>
 						<td>{{ guestbook.reg_date|date:'Y-m-d H:i' }}</td>
-						<td><a href="/guestbook/delete/{{guestbook.id}}">삭제</a></td>
+						<td><a href="{% url 'guestbook:delete' guestbook.id %}">삭제</a></td>
 					</tr>
 					<tr>
 						<td colspan=4>
