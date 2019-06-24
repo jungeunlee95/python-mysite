@@ -7,7 +7,7 @@
 
 {% block content %}
 <div id="board">
-	<form class="board-form" method="post" action="{% url 'board:modify' %}">
+	<form class="board-form" method="post" action="{% url 'board:modify' page%}">
 		{% csrf_token %}
 		<table class="tbl-ex">
 			<input type="hidden" name="id" value="{{board.id}}">
@@ -26,7 +26,7 @@
 			</tr>
 		</table>
 		<div class="bottom">
-			<a href="{% url 'board:list' %}">취소</a>
+			<a href="{% url 'board:list' page %}">취소</a>
 			<input type="submit" value="수정">
 		</div>
 	</form>
