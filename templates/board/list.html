@@ -7,8 +7,7 @@
 
 {% block content %}
 <div id="board">
-	<form id="search_form" action="" method="post">
-		{% csrf_token %}
+	<form id="search_form" action="/board/list" method="get">
 		<input type="text" id="kwd" name="kwd" value="">
 		<input type="submit" value="찾기">
 	</form>
@@ -28,7 +27,7 @@
 					{% if board.title == '삭제된 글입니다.'%}
 						{{board.title}}
 					{% else %}
-						<a href="{% url 'board:view' board.id page%}">{{board.title}}</a>
+						<a href="{% url 'board:view' board.id page %}?kwd={{kwd}}">{{board.title}}</a>
 					{% endif %}
 				</td>
 		{% else %}
@@ -36,7 +35,7 @@
 					{% if board.title == '삭제된 글입니다.'%}
 					<img src="/assets/images/reply.png">{{board.title}}
 					{% else %}
-					<img src="/assets/images/reply.png"><a href="{% url 'board:view' board.id page %}">{{board.title}}</a>
+					<img src="/assets/images/reply.png"><a href="{% url 'board:view' board.id page %}?kwd={{kwd}}">{{board.title}}</a>
 					{% endif %}
 				</td>
 		{% endif %}
@@ -61,8 +60,9 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="/assets/js/paging.js"></script>
 <script>
-	var listCount = {{board_count}}
-	var currentPage = {{current_page}}
-	setPage(listCount, currentPage);
+	var listCount = {{board_count}};
+	var currentPage = {{current_page}};
+	var kwd = "{{kwd}}";
+	setPage(listCount, currentPage, kwd);
 </script>
 {% endblock%}

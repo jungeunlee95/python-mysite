@@ -7,11 +7,12 @@ from django.shortcuts import render
 # Create your views here.
 from board.models import Board
 from user.models import User
+import json
 
 PAGESIZE=10
 def list(request, page=1):
-    kwd = request.POST.get('kwd')
-    if kwd is None or kwd is '':
+    kwd = request.GET.get('kwd')
+    if kwd is None or kwd is '' or kwd == 'null':
         start = (page - 1) * PAGESIZE
         board_count = Board.objects.count()
         boardlist = Board.objects.all().order_by('-groupno','orderno')[start:start+PAGESIZE]
@@ -25,8 +26,14 @@ def list(request, page=1):
         'board_count': board_count,
         'current_page': page,
         'page':page,
-        'kwd':kwd
     }
+
+    # 검색어
+    kwd = request.GET.get('kwd')
+    if kwd is None:
+        data['kwd'] = json.dumps(kwd)
+    else:
+        data['kwd'] = kwd
 
     return render(request, 'board/list.html', data)
 
@@ -39,7 +46,14 @@ def writeform(request, no=-1, page=1):
     if no == -1:
         return render(request, 'board/write.html',{"page":page})
     else:
-        return render(request, 'board/write.html', {"no":no, "page":page})
+        data = {"no":no, "page":page}
+        # 검색어
+        kwd = request.GET.get('kwd')
+        if kwd is None:
+            data['kwd'] = json.dumps(kwd)
+        else:
+            data['kwd'] = kwd
+        return render(request, 'board/write.html', data)
 
 def write(request, page=1):
     # 인증
@@ -63,10 +77,18 @@ def write(request, page=1):
         board.groupno = board2.groupno
         board.orderno = board2.orderno+1
         board.depth = board2.depth+1
+        board.save()
     data= {
         'page':1
     }
-    return HttpResponseRedirect(f'/board/list/{page}')
+    # 검색어
+    kwd = request.GET.get('kwd')
+    print(kwd,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    if kwd is None:
+        data['kwd'] = json.dumps(kwd)
+    else:
+        data['kwd'] = kwd
+    return HttpResponseRedirect(f'/board/list/{page}?kwd={kwd}')
 
 def view(request, no=0, page=1):
     # 존재하는 게시글이 없을 경우 return
@@ -79,6 +101,13 @@ def view(request, no=0, page=1):
         'board':board[0],
         'page':page,
     }
+
+    # 검색어
+    kwd = request.GET.get('kwd')
+    if kwd is None:
+        data['kwd'] = json.dumps(kwd)
+    else:
+        data['kwd'] = kwd
 
     response = render(request, 'board/view.html', data)
     # [1] 로그인 확인
@@ -118,6 +147,14 @@ def modifyform(request, no=0, page=1):
         'board':board,
         'page':page,
     }
+
+    # 검색어
+    kwd = request.GET.get('kwd')
+    if kwd is None:
+        data['kwd'] = json.dumps(kwd)
+    else:
+        data['kwd'] = kwd
+
     return render(request, 'board/modify.html', data)
 
 def modify(request, page=1):
@@ -134,6 +171,14 @@ def modify(request, page=1):
         'board':board,
         'page':page,
     }
+
+    # 검색어
+    kwd = request.GET.get('kwd')
+    if kwd is None:
+        data['kwd'] = json.dumps(kwd)
+    else:
+        data['kwd'] = kwd
+
     return HttpResponseRedirect('/board/'+board_id+'/'+str(page), data)
 
 def delete(request, no=0, page=1):
