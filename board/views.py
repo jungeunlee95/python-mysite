@@ -10,26 +10,42 @@ from user.models import User
 
 PAGESIZE=10
 def list(request, page=1):
-    start = (page - 1) * PAGESIZE
-    board_count = Board.objects.count()
-    boardlist = Board.objects.all().order_by('-groupno','orderno')[start:start+PAGESIZE]
+    kwd = request.POST.get('kwd')
+    if kwd is None or kwd is '':
+        start = (page - 1) * PAGESIZE
+        board_count = Board.objects.count()
+        boardlist = Board.objects.all().order_by('-groupno','orderno')[start:start+PAGESIZE]
+    else:
+        start = (page - 1) * PAGESIZE
+        board_count = Board.objects.filter(title__contains=kwd).count()
+        boardlist = Board.objects.filter(title__contains=kwd).order_by('-groupno', 'orderno')[start:start + PAGESIZE]
 
     data = {
         'boardlist': boardlist,
         'board_count': board_count,
         'current_page': page,
         'page':page,
+        'kwd':kwd
     }
 
     return render(request, 'board/list.html', data)
 
 def writeform(request, no=-1, page=1):
+    # 인증
+    authuser = request.session.get('authUser')
+    if authuser is None:
+        return HttpResponseRedirect('/board/list')
+
     if no == -1:
         return render(request, 'board/write.html',{"page":page})
     else:
         return render(request, 'board/write.html', {"no":no, "page":page})
 
 def write(request, page=1):
+    # 인증
+    authuser = request.session.get('authUser')
+    if authuser is None:
+        return HttpResponseRedirect('/board/list')
     board = Board()
     board.title = request.POST['title']
     board.content = request.POST['content']
@@ -47,7 +63,6 @@ def write(request, page=1):
         board.groupno = board2.groupno
         board.orderno = board2.orderno+1
         board.depth = board2.depth+1
-        board.save()
     data= {
         'page':1
     }
@@ -93,7 +108,12 @@ def view(request, no=0, page=1):
     return render(request, 'board/view.html', data)
 
 def modifyform(request, no=0, page=1):
+    # 인증
     board = Board.objects.filter(id=no)[0]
+    authuser = request.session.get('authUser')
+    if authuser is None or board.user.id != authuser['id'] :
+        return HttpResponseRedirect('/board/list')
+
     data = {
         'board':board,
         'page':page,
@@ -101,19 +121,27 @@ def modifyform(request, no=0, page=1):
     return render(request, 'board/modify.html', data)
 
 def modify(request, page=1):
+    # 인증
     board_id = request.POST['id']
     board = Board.objects.get(id=board_id)
+    authuser = request.session.get('authUser')
+    if authuser is None or board.user.id != authuser['id'] :
+        return HttpResponseRedirect('/board/list')
+
     board.title = request.POST['title']
     board.content = request.POST['content']
-    board.save()
     data = {
         'board':board,
         'page':page,
     }
-    return HttpResponseRedirect(board_id, data)
+    return HttpResponseRedirect('/board/'+board_id+'/'+str(page), data)
 
 def delete(request, no=0, page=1):
     board = Board.objects.get(id=no)
+    # 인증
+    authuser = request.session.get('authUser')
+    if authuser is None or board.user.id != authuser['id'] :
+        return HttpResponseRedirect('/board/list')
+
     board.title = '삭제된 글입니다.'
-    board.save()
     return HttpResponseRedirect(f'/board/list/{page}')

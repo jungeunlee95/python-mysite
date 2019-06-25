@@ -19,7 +19,7 @@ def write(request):
 
     return HttpResponseRedirect('list')
 
-def delete(request, id=0):
+def delete(request, id):
     if request.method == 'GET':
         return render(request, 'guestbook/deleteform.html', {'id': id})
     elif request.method == 'POST':
@@ -30,4 +30,4 @@ def delete(request, id=0):
         if guestbook[0].password == password:
             guestbook.delete()
 
-        return HttpResponseRedirect('list')
+        return HttpResponseRedirect('/guestbook/list')

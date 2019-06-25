@@ -59,6 +59,11 @@ def logout(request):
 # 회원정보 수정
 def updateform(request):
     user = User.objects.get(id=request.session['authUser']['id'])
+    # 인증
+    authuser = request.session.get('authUser')
+    if authuser is None or user.id != authuser['id'] :
+        return HttpResponseRedirect('/')
+
     data = {
         'user':user
     }
@@ -66,6 +71,11 @@ def updateform(request):
 
 def update(request):
     user = User.objects.get(id=request.session['authUser']['id'])
+    # 인증
+    authuser = request.session.get('authUser')
+    if authuser is None or user.id != authuser['id'] :
+        return HttpResponseRedirect('/')
+
     user.name = request.POST['name']
     user.gender = request.POST['gender']
 
