@@ -1,0 +1,39 @@
+{% extends '../../base.html' %}
+{% load mathfilters %}
+
+{% block csslink %}
+<link href="/assets/css/board.css" rel="stylesheet" type="text/css">
+{% endblock%}
+
+{% block content %}
+<div id="board">
+	<!--<form class="board-form" method="post" action="/board/write">-->
+	<form class="board-form" method="post" action="{% url 'board:write' page %}?kwd={{kwd}}">
+		{% csrf_token %}
+		{% if no %}
+			<input type="hidden" name="no" value="{{no}}">
+		{% else %}
+			<input type="hidden" name="no" value="-1">
+		{% endif %}
+		<table class="tbl-ex">
+			<tr>
+				<th colspan="2">글쓰기</th>
+			</tr>
+			<tr>
+				<td class="label">제목</td>
+				<td><input type="text" name="title" value=""></td>
+			</tr>
+			<tr>
+				<td class="label">내용</td>
+				<td>
+					<textarea id="content" name="content"></textarea>
+				</td>
+			</tr>
+		</table>
+		<div class="bottom">
+			<a href="{% url 'board:list' page %}?kwd={{kwd}}">취소</a>
+			<input type="submit" value="등록">
+		</div>
+	</form>
+</div>
+{% endblock%}

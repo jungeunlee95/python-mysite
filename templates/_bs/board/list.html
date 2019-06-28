@@ -1,0 +1,69 @@
+{% extends '../../base.html' %}
+{% load mathfilters %}
+
+{% block csslink %}
+{% endblock%}
+
+{% block content %}
+<div id="board">
+	<form id="search_form" action="/board/list" method="get">
+		<input type="text" id="kwd" name="kwd" value="">
+		<input type="submit" value="찾기">
+	</form>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>글쓴이</th>
+				<th>조회수</th>
+				<th>작성일</th>
+			</tr>
+		</thead>
+		{% for board in boardlist %}
+			<tr>
+				<td>[{{current_page|sub:1|mul:10|add:forloop.counter|sub:1|sub:board_count|abs}}]</td>
+		{% if board.depth == 0 %}
+				<td style="text-align: left;">
+					{% if board.title == '삭제된 글입니다.'%}
+						{{board.title}}
+					{% else %}
+						<a href="{% url 'board:view' board.id page %}?kwd={{kwd}}">{{board.title}}</a>
+					{% endif %}
+				</td>
+		{% else %}
+				<td style="text-align: left;padding-left:{{board.depth|mul:15}}px;">
+					{% if board.title == '삭제된 글입니다.'%}
+					<img src="/assets/images/reply.png">{{board.title}}
+					{% else %}
+					<img src="/assets/images/reply.png"><a href="{% url 'board:view' board.id page %}?kwd={{kwd}}">{{board.title}}</a>
+					{% endif %}
+				</td>
+		{% endif %}
+				<td>{{board.user.name}}</td>
+				<td>{{board.hit}}</td>
+				<td>{{board.regdate|date:'Y-m-d H:i'}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+
+	<!-- pager 추가 -->
+	<div class="pager">
+		<ul id="pager">
+		</ul>
+	</div>
+	<!-- pager 추가 -->
+
+	<div class="bottom">
+		<a href="{% url 'board:writeform' page %}" id="new-book">글쓰기</a>
+	</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="/assets/js/paging.js"></script>
+<script>
+	var listCount = {{board_count}};
+	var currentPage = {{current_page}};
+	var kwd = "{{kwd}}";
+	setPage(listCount, currentPage, kwd);
+</script>
+{% endblock%}

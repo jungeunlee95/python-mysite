@@ -3,42 +3,88 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<!-- Bootstrap -->
+<link href="/assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 {% block csslink %}
 {% endblock %}
+<style>
+	header{
+		width: 100%;
+	}
+	header .nav{
+		background-color: #0f0f0f;
+	}
+	header .nav > li > a {
+		color: pink;
+	}
+
+	.nav-link:hover {
+		color: #0f0f0f;
+	}
+
+	#logo{ 
+		width:120px;
+		height: 39px;
+	}
+	#logo h1{
+		font-size: 0px;
+	}
+</style>
 </head>
 <body>
-	<div id="container">
-		<div id="header">
-			<h1>MySite</h1>
-			<ul>
-				{% if request.session.authUser is None %}
-				<li><a href="{% url 'user:loginform' %}">로그인</a><li>
-				<li><a href="{% url 'user:joinform' %}">회원가입</a><li>
-
-				{% else %}
-				<li><a href="{% url 'user:updateform' %}">회원정보수정</a><li>
-				<li><a href="{% url 'user:logout' %}">로그아웃</a><li>
-				<li>[{{ request.session.authUser.name }}]님 안녕하세요 ^^;</li>
-				{% endif %}
-			</ul>
-		</div>
-		<div id="wrapper">
-			<div id="content">
-
-                {% block content %}{% endblock %}
-
+	<div class="container">
+		<header>
+			<div class="row">
+				<ul class="nav">
+				  <li class="nav-item navbar-left">
+					<img src="/assets/images/4.gif" id="logo"><h1>MySite</h1></img>
+				  </li>
+					{% if request.session.authUser is None %}
+					<li class="nav-item navbar-toggle">
+						<a class="nav-link" href="{% url 'user:loginform' %}">로그인</a>
+					</li>
+					<li class="nav-item navbar-toggle">
+						<a class="nav-link" href="{% url 'user:joinform' %}">회원가입</a>
+					</li>
+					 {% else %}
+					<li class="nav-item navbar-toggle">
+						<a class="nav-link" href="{% url 'user:updateform' %}">정보수정</a>
+					</li>
+					<li class="nav-item navbar-toggle">
+						<a class="nav-link" href="{% url 'user:logout' %}">로그아웃</a>
+					</li>
+					<li class="nav-item navbar-toggle">
+						<a class="nav-link disabled display-3" href="#" tabindex="-1" aria-disabled="true">[{{ request.session.authUser.name }}]님 안녕하세요 ^^</a>
+					</li>
+					{% endif %}
+				</ul>
 			</div>
+		</header>
+		<div class="row">
+			<div class="col-md-2 nav">
+				<ul class="nav">
+					<li><img id="profile" src="https://jungeunlee95.github.io/public/profile.png" style="width: 150px;height: 150px;"></li>
+					<li><a href="/">이정은</a></li>
+					<li><a href="{% url 'guestbook:list' %}">방명록</a></li>
+					<li><a href="{% url 'board:list' 1%}">게시판</a></li>
+				</ul>
+			</div>
+
+			<div class="col-md-8 cont">
+				{% block content %}{% endblock %}
+			</div>
+
 		</div>
-		<div id="navigation">
-			<ul>
-				<li><a href="/">이정은</a></li>
-				<li><a href="{% url 'guestbook:list' %}">방명록</a></li>
-				<li><a href="{% url 'board:list' 1%}">게시판</a></li>
-			</ul>
-		</div>
+
+		<hr>
+
+		<footer>
 		<div id="footer">
 			<p>(c)opyright 2015, 2016, 2017, 2018, 2019</p>
 		</div>
+		</footer>
 	</div>
 </body>
 </html>

@@ -1,0 +1,47 @@
+{% extends '../../base.html' %}
+{% load mathfilters %}
+
+{% block csslink %}
+<link href="/assets/css/board.css" rel="stylesheet" type="text/css">
+{% endblock%}
+
+{% block content %}
+<div id="board" class="board-form">
+	<table class="tbl-ex">
+		<tr>
+			<th colspan="2">글보기</th>
+		</tr>
+		<tr>
+			<td class="label">제목</td>
+			<td>{{board.title}}</td>
+		</tr>
+		<tr>
+			<td class="label">글쓴이</td>
+			<td>{{board.user.name}}</td>
+		</tr>
+		<tr>
+			<td class="label">조회수</td>
+			<td>{{board.hit}}</td>
+		</tr>
+		<tr>
+			<td class="label">내용</td>
+			<td>
+				<div class="view-content">
+					{{board.content|linebreaks}}
+				</div>
+			</td>
+		</tr>
+	</table>
+	<div class="bottom">
+		<a href="{% url 'board:list' page %}?kwd={{kwd}}">글목록</a>
+		{% if request.session.authUser is not None %}
+		<!--<a href="/board/writeform/{{board.id}}">답글</a>-->
+		<a href="{% url 'board:reply_writeform' board.id page %}?kwd={{kwd}}">답글</a>
+			{% if request.session.authUser.email == board.user.email %}
+				<a href="{% url 'board:modifyform' board.id page %}">글수정</a>
+				<a href="{% url 'board:delete' board.id page %}?kwd={{kwd}}">글삭제</a>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>
+{% endblock%}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>mysite</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<!-- Bootstrap -->
+<link href="assets/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/custom2.css" rel="stylesheet">
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+{% block csslink %}
+{% endblock %}
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<ul class="nav">
+			  <li class="nav-item navbar-left">
+				<a href="/"><h1>MySite</h1></a>
+			  </li>
+				{% if request.session.authUser is None %}
+				<li class="nav-item navbar-right">
+					<a class="nav-link" href="{% url 'user:loginform' %}">로그인</a>
+				</li>
+				<li class="nav-item navbar-right">
+					<a class="nav-link" href="{% url 'user:joinform' %}">회원가입</a>
+				</li>
+				 {% else %}
+				<li class="nav-item navbar-right">
+					<a class="nav-link" href="{% url 'user:updateform' %}">정보수정</a>
+				</li>
+				<li class="nav-item navbar-right">
+					<a class="nav-link" href="{% url 'user:logout' %}">로그아웃</a>
+				</li>
+				<li class="nav-item navbar-right">
+					<a class="nav-link disabled display-3" href="#" tabindex="-1" aria-disabled="true">[{{ request.session.authUser.name }}]님 안녕하세요 ^^</a>
+				</li>
+				{% endif %}
+			</ul>
+		</div>
+
+	</div>
+
+	<div id="wrapper">
+		<div id="content">
+
+			{% block content %}{% endblock %}
+
+		</div>
+	</div>
+	<div id="navigation">
+		<ul class="nav flex-column">
+		  <li class="nav-item">
+			<a class="nav-link active" href="#">Active</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Link</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Link</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+		  </li>
+		</ul>
+		<ul>
+			<li><a href="/">이정은</a></li>
+			<li><a href="{% url 'guestbook:list' %}">방명록</a></li>
+			<li><a href="{% url 'board:list' 1%}">게시판</a></li>
+		</ul>
+	</div>
+	<div id="footer">
+		<p>(c)opyright 2015, 2016, 2017, 2018, 2019</p>
+	</div>
+</div>
+</body>
+</html>

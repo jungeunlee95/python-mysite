@@ -35,7 +35,7 @@ def list(request, page=1):
     else:
         data['kwd'] = kwd
 
-    return render(request, 'board/list.html', data)
+    return render(request, '_bs/board/list.html', data)
 
 def writeform(request, no=-1, page=1):
     # 인증
